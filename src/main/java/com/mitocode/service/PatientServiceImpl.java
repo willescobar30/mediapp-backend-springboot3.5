@@ -2,17 +2,25 @@ package com.mitocode.service;
 
 import com.mitocode.model.Patient;
 import com.mitocode.repo.IpatientRepo;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 //anotacion para que la clase controller pueda acceder a ella
 @Service
+//Inyeccion de dependencias a traves de constructor(parametros requeridos)
+@RequiredArgsConstructor
 public class PatientServiceImpl implements IPatientService{
 
     //Pide a spring un bean del tipo patientrepo(inyeccion de dependencias)
-    //Tambien se puede acceder al bean de Repository atraves de la interfaz (inyeccion de dependencias)
-    @Autowired
-    private IpatientRepo repo;
+    //Tambien se puede acceder al bean de Repository atraves de la interfaz usando autowired(inyeccion de dependencias)
+    //@Autowired
+
+
+    //parametro requerido del constructor xq se usa @requiredargsconstructor
+    private final IpatientRepo repo;
+
+    //parametro opcional
+    private String mesage;
 
     //FUNCION PARA VALIDAR PATIENT VALIDO QUE VIENE DE LA BD
     @Override
