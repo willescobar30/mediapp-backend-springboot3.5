@@ -1,6 +1,7 @@
 package com.mitocode.controller;
 
 import com.mitocode.model.Patient;
+import com.mitocode.service.PatientService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -12,10 +13,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/patients")
 public class PatientController {
 
+    //inicializando clase PatientService
+    private PatientService service;
+
     @GetMapping
     public Patient sayHello(){
-        //inicializando constructor de la clase Patient y enviando sus valores requeridos
-        return new Patient(1, "Will","Rivas");
+
+        service = new PatientService();
+        //llamando funcion de la clse service y pasando id
+        return service.validPatient(0);
 
     }
 }
