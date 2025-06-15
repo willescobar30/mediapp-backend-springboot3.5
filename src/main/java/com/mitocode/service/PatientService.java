@@ -2,16 +2,21 @@ package com.mitocode.service;
 
 import com.mitocode.model.Patient;
 import com.mitocode.repo.PatientRepo;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+//anotacion para que la clase controller pueda acceder a ella
+@Service
 public class PatientService {
 
-    //INSTANCIANDO LA CLASE REPO QUE TRAE LA DATA DE LA BD
+    //Pide a spring un bean del tipo patientrepo(inyeccion de dependencias)
+    @Autowired
     private PatientRepo repo;
 
     //FUNCION PARA VALIDAR PATIENT VALIDO QUE VIENE DE LA BD
     public Patient validPatient(int idPatient){
-
-        repo = new PatientRepo();
+        //ya no es necesario indicar la instancia de forma explicita , porque se uso el Autowired
+        //repo = new PatientRepo();
         if(idPatient > 0){
             return repo.getPatientfromBD();
         }else{
