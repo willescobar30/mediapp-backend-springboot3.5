@@ -1,7 +1,7 @@
 package com.mitocode.service;
 
 import com.mitocode.model.Patient;
-import com.mitocode.repo.PatientRepoImpl;
+import com.mitocode.repo.IpatientRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -10,8 +10,9 @@ import org.springframework.stereotype.Service;
 public class PatientServiceImpl implements IPatientService{
 
     //Pide a spring un bean del tipo patientrepo(inyeccion de dependencias)
+    //Tambien se puede acceder al bean de Repository atraves de la interfaz (inyeccion de dependencias)
     @Autowired
-    private PatientRepoImpl repo;
+    private IpatientRepo repo;
 
     //FUNCION PARA VALIDAR PATIENT VALIDO QUE VIENE DE LA BD
     @Override
