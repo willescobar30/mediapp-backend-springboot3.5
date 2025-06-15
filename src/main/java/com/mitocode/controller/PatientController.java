@@ -1,7 +1,7 @@
 package com.mitocode.controller;
 
 import com.mitocode.model.Patient;
-import com.mitocode.service.PatientService;
+import com.mitocode.service.PatientServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,12 +16,12 @@ public class PatientController {
 
     //Pide a spring un bean del tipo patientservice(inyeccion de dependencias)
     @Autowired
-    private PatientService service;
+    private PatientServiceImpl service;
 
     @GetMapping
     public Patient sayHello(){
         //ya no es necesario indicar la instancia de forma explicita , porque se uso el Autowired
-        //service = new PatientService();
+        //service = new PatientServiceImpl();
 
         //llamando funcion de la clse service y pasando id
         return service.validPatient(1);
