@@ -1,7 +1,8 @@
-package com.mitocode.service;
+package com.mitocode.service.impl;
 
 import com.mitocode.model.Patient;
 import com.mitocode.repo.IpatientRepo;
+import com.mitocode.service.IPatientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -11,7 +12,7 @@ import java.util.List;
 @Service
 //Inyeccion de dependencias a traves de constructor(parametros requeridos)
 @RequiredArgsConstructor
-public class PatientServiceImpl implements IPatientService{
+public class PatientServiceImpl implements IPatientService {
 
     //Pide a spring un bean del tipo patientrepo(inyeccion de dependencias)
     //Tambien se puede acceder al bean de Repository atraves de la interfaz usando autowired(inyeccion de dependencias)
