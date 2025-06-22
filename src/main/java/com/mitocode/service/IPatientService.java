@@ -2,10 +2,9 @@ package com.mitocode.service;
 
 import com.mitocode.model.Patient;
 
-import java.util.List;
+public interface IPatientService extends ICRUD<Patient, Integer>{
 
-public interface IPatientService {
-
+    /*
     //funcion guardar un paciente
     Patient save(Patient patient) throws Exception;
 
@@ -20,6 +19,6 @@ public interface IPatientService {
 
     //funcion borrar un paciente
     void delete(Integer id) throws Exception;
-
+ */
     //Patient validPatient(int idPatient);
 }
