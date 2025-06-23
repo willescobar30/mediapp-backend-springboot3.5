@@ -1,12 +1,12 @@
 package com.mitocode.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 //genera getters, setters, tostring, equalsandhashcode
 @Data
@@ -31,6 +31,15 @@ public class Menu {
     private String name;
     @Column(nullable = false, length = 50)
     private String url;
+
+    //otra forma de hacer realcion de muchos a muchos
+    //haciendo relacion desde tabla Menu a tabla Role
+    //fetch sgignifica que traera toda la informacion de Menu y Roles(funciona como un inner join)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "menu_role",
+            joinColumns =  @JoinColumn(name = "id_menu", referencedColumnName = "idMenu"),
+            inverseJoinColumns = @JoinColumn(name = "id_role", referencedColumnName = "idRole"))
+    private List<Role> roles;
 
 
 }
