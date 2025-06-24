@@ -45,14 +45,14 @@ public class PatientController {
     }
 
     //actualizando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
-    @PutMapping("{/id}")
+    @PutMapping("/{id}")
     public ResponseEntity<Patient> update(@RequestBody Patient patient, @PathVariable("id") Integer id) throws Exception{
         Patient obj = service.update(patient, id);
         return ResponseEntity.ok().body(obj);
     }
 
     //eliminando un paciente por id y contorlando respuesta http con ResponseEntity
-    @DeleteMapping("{/id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws Exception{
         service.delete(id);
         return ResponseEntity.noContent().build();
