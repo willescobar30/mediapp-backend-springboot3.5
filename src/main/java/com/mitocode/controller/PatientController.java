@@ -3,6 +3,7 @@ package com.mitocode.controller;
 import com.mitocode.dto.PatientDTO;
 import com.mitocode.model.Patient;
 import com.mitocode.service.IPatientService;
+import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -47,8 +48,9 @@ public class PatientController {
     }
 
     //guardando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
+    //@Valid sirve para que los jakarta validation constraint del Patient DTO funcionen
     @PostMapping
-    public ResponseEntity<Patient> save(@RequestBody PatientDTO dto) throws Exception{
+    public ResponseEntity<Patient> save(@Valid @RequestBody PatientDTO dto) throws Exception{
         //haciendo proceso contrario de dto a entidad(Patient) con ModelMapper
         Patient obj = service.save(convertToEntity(dto));
         return ResponseEntity.ok().body(modelMapper.map(obj, Patient.class));
@@ -56,7 +58,7 @@ public class PatientController {
 
     //actualizando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDTO> update(@RequestBody PatientDTO dto, @PathVariable("id") Integer id) throws Exception{
+    public ResponseEntity<PatientDTO> update(@Valid @RequestBody PatientDTO dto, @PathVariable("id") Integer id) throws Exception{
         //haciendo proceso contrario de dto a entidad(Patient) con ModelMapper
         Patient obj = service.update(convertToEntity(dto), id);
         return ResponseEntity.ok().body(convertToDto(obj));
