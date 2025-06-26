@@ -6,6 +6,8 @@ import com.mitocode.service.IPatientService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -69,6 +71,22 @@ public class PatientController {
     public ResponseEntity<Void> delete(@PathVariable("id") Integer id) throws Exception{
         service.delete(id);
         return ResponseEntity.noContent().build();
+    }
+
+    //creando metodo para funcionalidad hateoas(se debe devolver un EntityModel)
+    @GetMapping("/hateoas/{id}")
+    public EntityModel<PatientDTO> findByIdHateoas(@PathVariable("id") Integer id) throws Exception{
+        //recibiendo el obj Patient despues de haber consultado en la BD
+        Patient obj = service.findById(id);
+        EntityModel<PatientDTO> resource = EntityModel.of(convertToDto(obj));
+
+        //generando link informativo para buscar Patient by id (no se usa el metodo findById solo sirve de referencia)
+        WebMvcLinkBuilder link1 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientController.class).findById(obj.getIdPatient()));
+
+        //agregando el link generado al resource
+        resource.add(link1.withRel("patient-self-info"));
+
+        return resource;
     }
 
     //metodos utilitarios para modelmapper

@@ -33,6 +33,12 @@
 			<artifactId>spring-boot-starter-validation</artifactId>
 		</dependency>
 
+		<!-- agregando hateoas -->
+		<dependency>
+			<groupId>org.springframework.hateoas</groupId>
+			<artifactId>spring-hateoas</artifactId>
+		</dependency>
+
 		<!-- permite transformar de DTO a modelo y modelo a DTO -->
 		<dependency>
 			<groupId>org.modelmapper</groupId>
