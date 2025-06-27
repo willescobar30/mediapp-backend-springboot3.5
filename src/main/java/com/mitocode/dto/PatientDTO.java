@@ -1,12 +1,12 @@
 package com.mitocode.dto;
 
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
@@ -18,24 +18,26 @@ public class PatientDTO {
 
     //agregando Jakarta validation constraint
     //para validar que el nombre no vaya vacio
-    @NonNull
+    @NotNull
     //@NotEmpty
     //@NotBlank
     //validando tamanio de los caracteres del nombre y lanzando mensaje de warning
-    @Size(min = 3, max= 70, message = "FirstName must have 3 characters")
+    //leyendo valor de idioma dek messages.properties
+    @Size(min = 3, max= 70, message = "{firstname.size}")
     private String firstName;
-    @NonNull
-    @Size(min = 3, max = 70, message = "Lastname must have 3 characters")
+    @NotNull
+    //leyendo valor de idioma dek messages.properties
+    @Size(min = 3, max = 70, message = "{lastname.size}")
     private String lastName;
-    @NonNull
+    @NotNull
     private String dni;
-    @NonNull
+    @NotNull
     private String address;
-    @NonNull
+    @NotNull
     //validando regex para que solo maneje numeros
     @Pattern(regexp = "[0-9]+")
     private String phone;
-    @NonNull
+    @NotNull
     //validando formato de email
     @Email
     private String email;
