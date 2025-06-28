@@ -1,8 +1,8 @@
 package com.mitocode.controller;
 
-import com.mitocode.dto.PatientDTO;
-import com.mitocode.model.Patient;
-import com.mitocode.service.IPatientService;
+import com.mitocode.dto.MedicDTO;
+import com.mitocode.model.Medic;
+import com.mitocode.service.IMedicService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -18,54 +18,54 @@ import java.util.List;
 @RestController
 
 //permite exponer el servicio REST a traves de una url
-@RequestMapping("/patients")
+@RequestMapping("/medics")
 
 //Inyeccion de dependencias a traves de constructor
 @AllArgsConstructor
-public class PatientController {
+public class MedicController {
 
-    //Pide a spring un bean del tipo patientservice(inyeccion de dependencias)
+    //Pide a spring un bean del tipo medicservice(inyeccion de dependencias)
     //Tambien se puede acceder al bean de Repository atraves de la interfaz usando autowired(inyeccion de dependencias)
     //@Autowired
-    private final IPatientService service;
+    private final IMedicService service;
 
     //haciendo inyeccion de dependencias de la clase MapperConfig para modelmapper para evitar hacer inteaccion directa con el Modelo
     //QUALIFIER permite hacer inyeccion de dependencias en base a un apodo de un Bean
-    @Qualifier("defaultMapper")
+    @Qualifier("medicMapper")
     private final ModelMapper modelMapper;
 
     //trayendo todos los pacientes y contorlando respuesta http con ResponseEntity
     @GetMapping
-    public ResponseEntity<List<PatientDTO>> findAll() throws Exception{
+    public ResponseEntity<List<MedicDTO>> findAll() throws Exception{
         //stream.map funciona como un for para recorrer los elementos del DTO
-        //e -> es la iteracion de Patient y la la transforma a PatientDTO
+        //e -> es la iteracion de Medic y la la transforma a MedicDTO
         //usando funcion convertToDto
-        List<PatientDTO> list = service.findAll().stream().map(this::convertToDto).toList();
+        List<MedicDTO> list = service.findAll().stream().map(this::convertToDto).toList();
         return ResponseEntity.ok().body(list);
     }
 
     //trayendo paciente por id (recuperando id de la url con @PathVariable) y contorlando respuesta http con ResponseEntity
     @GetMapping("/{id}")
-    public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id) throws Exception{
+    public ResponseEntity<MedicDTO> findById(@PathVariable("id") Integer id) throws Exception{
         //devolviendo obejto DTO para evitar hacer inteaccion directa con el Modelo
-        PatientDTO obj = convertToDto(service.findById(id));
+        MedicDTO obj = convertToDto(service.findById(id));
         return ResponseEntity.ok().body(obj);
     }
 
     //guardando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
-    //@Valid sirve para que los jakarta validation constraint del Patient DTO funcionen
+    //@Valid sirve para que los jakarta validation constraint del Medic DTO funcionen
     @PostMapping
-    public ResponseEntity<Patient> save(@Valid @RequestBody PatientDTO dto) throws Exception{
-        //haciendo proceso contrario de dto a entidad(Patient) con ModelMapper
-        Patient obj = service.save(convertToEntity(dto));
-        return ResponseEntity.ok().body(modelMapper.map(obj, Patient.class));
+    public ResponseEntity<Medic> save(@Valid @RequestBody MedicDTO dto) throws Exception{
+        //haciendo proceso contrario de dto a entidad(Medic) con ModelMapper
+        Medic obj = service.save(convertToEntity(dto));
+        return ResponseEntity.ok().body(modelMapper.map(obj, Medic.class));
     }
 
     //actualizando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
     @PutMapping("/{id}")
-    public ResponseEntity<PatientDTO> update(@Valid @RequestBody PatientDTO dto, @PathVariable("id") Integer id) throws Exception{
-        //haciendo proceso contrario de dto a entidad(Patient) con ModelMapper
-        Patient obj = service.update(convertToEntity(dto), id);
+    public ResponseEntity<MedicDTO> update(@Valid @RequestBody MedicDTO dto, @PathVariable("id") Integer id) throws Exception{
+        //haciendo proceso contrario de dto a entidad(Medic) con ModelMapper
+        Medic obj = service.update(convertToEntity(dto), id);
         return ResponseEntity.ok().body(convertToDto(obj));
     }
 
@@ -78,16 +78,16 @@ public class PatientController {
 
     //creando metodo para funcionalidad hateoas(se debe devolver un EntityModel)
     @GetMapping("/hateoas/{id}")
-    public EntityModel<PatientDTO> findByIdHateoas(@PathVariable("id") Integer id) throws Exception{
-        //recibiendo el obj Patient despues de haber consultado en la BD
-        Patient obj = service.findById(id);
-        EntityModel<PatientDTO> resource = EntityModel.of(convertToDto(obj));
+    public EntityModel<MedicDTO> findByIdHateoas(@PathVariable("id") Integer id) throws Exception{
+        //recibiendo el obj Medic despues de haber consultado en la BD
+        Medic obj = service.findById(id);
+        EntityModel<MedicDTO> resource = EntityModel.of(convertToDto(obj));
 
-        //generando link informativo para buscar Patient by id (no se usa el metodo findById solo sirve de referencia)
-        WebMvcLinkBuilder link1 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientController.class).findById(obj.getIdPatient()));
+        //generando link informativo para buscar Medic by id (no se usa el metodo findById solo sirve de referencia)
+        WebMvcLinkBuilder link1 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(MedicController.class).findById(obj.getIdMedic()));
 
         //agregando el link generado al resource
-        resource.add(link1.withRel("patient-self-info"));
+        resource.add(link1.withRel("medic-self-info"));
 
         return resource;
     }
@@ -95,22 +95,13 @@ public class PatientController {
     //metodos utilitarios para modelmapper
 
     //convertir hacia entity
-    private Patient convertToEntity(PatientDTO dto){
-        return modelMapper.map(dto, Patient.class);
+    private Medic convertToEntity(MedicDTO dto){
+        return modelMapper.map(dto, Medic.class);
     }
 
     //convertir hacia dto
-    private PatientDTO convertToDto(Patient entity){
-        return modelMapper.map(entity, PatientDTO.class);
+    private MedicDTO convertToDto(Medic entity){
+        return modelMapper.map(entity, MedicDTO.class);
     }
 
-    /*
-    @GetMapping
-    public Patient sayHello(){
-        //ya no es necesario indicar la instancia de forma explicita , porque se uso el Autowired
-        //service = new PatientServiceImpl();
-
-        //llamando funcion de la clse service y pasando id
-        return service.validPatient(1);
-    }*/
 }

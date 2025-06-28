@@ -1,8 +1,6 @@
 package com.mitocode.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -23,6 +21,8 @@ import lombok.NoArgsConstructor;
 public class Speciality {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Integer idSpeciality;
 
     @Column(nullable = false, length = 50)
