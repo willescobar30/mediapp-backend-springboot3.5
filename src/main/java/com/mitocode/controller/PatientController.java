@@ -3,10 +3,9 @@ package com.mitocode.controller;
 import com.mitocode.dto.PatientDTO;
 import com.mitocode.model.Patient;
 import com.mitocode.service.IPatientService;
+import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -31,8 +30,10 @@ public class PatientController {
 
     //haciendo inyeccion de dependencias de la clase MapperConfig para modelmapper para evitar hacer inteaccion directa con el Modelo
     //QUALIFIER permite hacer inyeccion de dependencias en base a un apodo de un Bean
-    @Qualifier("defaultMapper")
-    private final ModelMapper modelMapper;
+    //@Qualifier("defaultMapper")
+    //private final ModelMapper modelMapper;
+    //inyectando a MapperUtil
+    private final MapperUtil mapperUtil;
 
     //trayendo todos los pacientes y contorlando respuesta http con ResponseEntity
     @GetMapping
@@ -40,7 +41,9 @@ public class PatientController {
         //stream.map funciona como un for para recorrer los elementos del DTO
         //e -> es la iteracion de Patient y la la transforma a PatientDTO
         //usando funcion convertToDto
-        List<PatientDTO> list = service.findAll().stream().map(this::convertToDto).toList();
+        //List<PatientDTO> list = service.findAll().stream().map(this::convertToDto).toList();
+        //usando MapperUtil class
+        List<PatientDTO> list = mapperUtil.mapList(service.findAll(), PatientDTO.class);
         return ResponseEntity.ok().body(list);
     }
 
@@ -48,25 +51,31 @@ public class PatientController {
     @GetMapping("/{id}")
     public ResponseEntity<PatientDTO> findById(@PathVariable("id") Integer id) throws Exception{
         //devolviendo obejto DTO para evitar hacer inteaccion directa con el Modelo
-        PatientDTO obj = convertToDto(service.findById(id));
+        //PatientDTO obj = convertToDto(service.findById(id));
+        //usando MapperUtil class
+        PatientDTO obj = mapperUtil.map(service.findById(id), PatientDTO.class);
         return ResponseEntity.ok().body(obj);
     }
 
     //guardando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
     //@Valid sirve para que los jakarta validation constraint del Patient DTO funcionen
     @PostMapping
-    public ResponseEntity<Patient> save(@Valid @RequestBody PatientDTO dto) throws Exception{
+    public ResponseEntity<PatientDTO> save(@Valid @RequestBody PatientDTO dto) throws Exception{
         //haciendo proceso contrario de dto a entidad(Patient) con ModelMapper
-        Patient obj = service.save(convertToEntity(dto));
-        return ResponseEntity.ok().body(modelMapper.map(obj, Patient.class));
+        //Patient obj = service.save(convertToEntity(dto));
+        //usando MapperUtil class
+        Patient obj = service.save(mapperUtil.map(dto, Patient.class));
+        return ResponseEntity.ok().body(mapperUtil.map(obj, PatientDTO.class));
     }
 
     //actualizando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo
     @PutMapping("/{id}")
     public ResponseEntity<PatientDTO> update(@Valid @RequestBody PatientDTO dto, @PathVariable("id") Integer id) throws Exception{
         //haciendo proceso contrario de dto a entidad(Patient) con ModelMapper
-        Patient obj = service.update(convertToEntity(dto), id);
-        return ResponseEntity.ok().body(convertToDto(obj));
+        //Patient obj = service.update(convertToEntity(dto), id);
+        //usando MapperUtil class
+        Patient obj = service.update(mapperUtil.map(dto, Patient.class), id);
+        return ResponseEntity.ok().body(mapperUtil.map(obj, PatientDTO.class));
     }
 
     //eliminando un paciente por id y contorlando respuesta http con ResponseEntity
@@ -81,7 +90,8 @@ public class PatientController {
     public EntityModel<PatientDTO> findByIdHateoas(@PathVariable("id") Integer id) throws Exception{
         //recibiendo el obj Patient despues de haber consultado en la BD
         Patient obj = service.findById(id);
-        EntityModel<PatientDTO> resource = EntityModel.of(convertToDto(obj));
+        //usando MapperUtil class
+        EntityModel<PatientDTO> resource = EntityModel.of(mapperUtil.map(obj, PatientDTO.class));
 
         //generando link informativo para buscar Patient by id (no se usa el metodo findById solo sirve de referencia)
         WebMvcLinkBuilder link1 = WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(PatientController.class).findById(obj.getIdPatient()));
@@ -95,7 +105,7 @@ public class PatientController {
     //metodos utilitarios para modelmapper
 
     //convertir hacia entity
-    private Patient convertToEntity(PatientDTO dto){
+   /* private Patient convertToEntity(PatientDTO dto){
         return modelMapper.map(dto, Patient.class);
     }
 
@@ -103,7 +113,7 @@ public class PatientController {
     private PatientDTO convertToDto(Patient entity){
         return modelMapper.map(entity, PatientDTO.class);
     }
-
+    */
     /*
     @GetMapping
     public Patient sayHello(){
