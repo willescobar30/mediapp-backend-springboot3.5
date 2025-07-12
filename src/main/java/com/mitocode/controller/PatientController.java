@@ -5,7 +5,7 @@ import com.mitocode.model.Patient;
 import com.mitocode.service.IPatientService;
 import com.mitocode.util.MapperUtil;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
@@ -18,9 +18,9 @@ import java.util.List;
 
 //permite exponer el servicio REST a traves de una url
 @RequestMapping("/patients")
-
+@RequiredArgsConstructor
 //Inyeccion de dependencias a traves de constructor
-@AllArgsConstructor
+//@AllArgsConstructor
 public class PatientController {
 
     //Pide a spring un bean del tipo patientservice(inyeccion de dependencias)
