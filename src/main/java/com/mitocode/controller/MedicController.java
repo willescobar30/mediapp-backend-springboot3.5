@@ -64,7 +64,7 @@ public class MedicController {
         //haciendo proceso contrario de dto a entidad(Medic) con ModelMapper
         //Medic obj = service.save(convertToEntity(dto));
         //usando MapperUtil class y mandando medicMapper como 3 parametro para ser usado en MapperUtil class
-        Medic obj = service.save(mapperUtil.map(dto, Medic.class));
+        Medic obj = service.save(mapperUtil.map(dto, Medic.class, "medicMapper"));
         return ResponseEntity.ok().body(mapperUtil.map(obj, Medic.class, "medicMapper"));
     }
 
@@ -74,7 +74,7 @@ public class MedicController {
         //haciendo proceso contrario de dto a entidad(Medic) con ModelMapper
         //Medic obj = service.update(convertToEntity(dto), id);
         //usando MapperUtil class y mandando medicMapper como 3 parametro para ser usado en MapperUtil class
-        Medic obj = service.update(mapperUtil.map(dto, Medic.class), id);
+        Medic obj = service.update(mapperUtil.map(dto, Medic.class, "medicMapper"), id);
         return ResponseEntity.ok().body(mapperUtil.map(obj, MedicDTO.class, "medicMapper"));
     }
 
