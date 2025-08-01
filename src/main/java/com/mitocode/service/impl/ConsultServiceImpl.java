@@ -42,6 +42,6 @@ public class ConsultServiceImpl extends CRUDImpl<Consult, Integer> implements IC
         //guardando listado de examenes para la consulta(tabla consult_exam)
         //para cada examen que trae la lista se llama a un repo para guardar basado en id de consulta y id de examen
         exams.forEach(exam -> consultExamRepo.saveExam(consult.getIdConsult(), exam.getIdExam()));
-        return null;
+        return consult;
     }
 }

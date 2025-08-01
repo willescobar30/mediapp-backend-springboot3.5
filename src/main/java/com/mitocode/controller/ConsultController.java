@@ -13,7 +13,9 @@ import org.springframework.hateoas.EntityModel;
 import org.springframework.hateoas.server.mvc.WebMvcLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 //permite hacer un servicio Rest
@@ -58,7 +60,7 @@ public class ConsultController {
     //@Valid sirve para que los jakarta validation constraint del Consult DTO funcionen
     //usando consultlistExamnDTO ya que se mostrara su consult y detalle(lista de examenes y details)
     @PostMapping
-    public ResponseEntity<Consult> save(@Valid @RequestBody ConsultListExamDTO dto) throws Exception{
+    public ResponseEntity<Void> save(@Valid @RequestBody ConsultListExamDTO dto) throws Exception{
 
         //recuperando la consulta y consult details
         Consult obj1 = convertToEntity(dto.getConsult());
@@ -68,7 +70,10 @@ public class ConsultController {
         //haciendo proceso contrario de dto a entidad(Consult) con ModelMapper
         //mandando el obj1 y la lista de examenes al service para que sean guardados
         Consult obj = service.saveTransactional(obj1, list);
-        return ResponseEntity.ok().body(modelMapper.map(obj, Consult.class));
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getIdConsult()).toUri();
+        //localhost:8080/consults/6
+        return ResponseEntity.created(location).build();
+        //return ResponseEntity.ok().body(modelMapper.map(obj, Consult.class));
     }
 
     //actualizando un paciente nuevo y contorlando respuesta http con ResponseEntity, usando @RequestBody para que data que se mande haga match con la clase Modelo

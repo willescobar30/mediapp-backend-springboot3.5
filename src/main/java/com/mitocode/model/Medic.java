@@ -36,7 +36,7 @@ public class Medic {
     private String lastName;
     @Column(nullable = false, length = 12)
     private String cmp;
-    @Column(length = 70)
+    @Column(length = 200)
     private String photUrl;
 
 }
